@@ -1,18 +1,24 @@
+// Version ONE
 /*
 - Create a shuffled deck
-- Player click "submit":
+- Player click "start":
   -- Player draw 2 cards face up
   -- Dealer(computer) draw 2 cards: 1st card face up, 2nd card face down
   -- wait for player's next move: "hit" or "stand"
   
 - If player choose "hit":
   -- Player draw 3rd card face up
+  -- wait for player's next move: "hit" or "stand"
 
 - If player choose "stand":
-  -- Dealer: if Dealer's hand total value < 17, dealer must draw one more card, until the total value is >= 17
-  -- Compare the total value of player hand and dealer hand, the highest value wins
-- Reset game mode
+  -- Dealer: if Dealer's hand total point < 17, dealer must draw one more card, until the total point is >= 17
+  -- Compare the total point of player hand and dealer hand:
+     --- If player's total point higher than dealer and <= 21, player wins
+     --- If dealer's total point higher than player and <= 21, dealer wins
+     --- If player's or/and dealer's total point > 21, then busted.
+  -- This round finished
 
+- Reset gameState and restart
 */
 const output = document.querySelector("#output-div");
 const playerHitBtn = document.querySelector("#hit-button");
