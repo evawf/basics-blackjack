@@ -17,7 +17,7 @@
 
 */
 
-let gameState = "start";
+let gameState = "preGame";
 let playerHand = [];
 let computerHand = [];
 let deck = shuffleCards(makeDeck());
