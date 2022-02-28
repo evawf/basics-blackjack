@@ -16,33 +16,11 @@
 - Reset game mode
 
 */
-const output = document.querySelector("#output-div");
-const playerHitBtn = document.querySelector("#hit-button");
-const playerStandBtn = document.querySelector("#hold-button");
-const restartBtn = document.querySelector("#restart-button");
-const playerDiv = document.querySelector("#player");
-const dealerDiv = document.querySelector("#dealer");
 
 let gameState = "start";
 let playerHand = [];
 let computerHand = [];
 let deck = shuffleCards(makeDeck());
-console.log(deck);
-
-playerHitBtn.addEventListener("click", function () {
-  gameState = "hit";
-  output.innerHTML = main();
-});
-
-playerStandBtn.addEventListener("click", function () {
-  console.log("clicked stand btn");
-  gameState = "stand";
-  output.innerHTML = main();
-});
-
-restartBtn.addEventListener("click", function () {
-  location.reload();
-});
 
 // Create all the cards
 function makeDeck() {
@@ -105,122 +83,7 @@ function shuffleCards(cardDeck) {
   return cardDeck;
 }
 
-function computePoints(hand) {
-  // Ace is 11
-  let points = 0;
-  for (let i = 0; i < hand.length; i++) {
-    let crtCardValue = hand[i].rank;
-    if (crtCardValue === 1) crtCardValue = 11;
-    points += crtCardValue;
-  }
-  if (points <= 21) {
-    return points;
-  }
-  points = 0;
-  for (let i = 0; i < hand.length; i++) {
-    points += hand[i].rank;
-  }
-
-  return points;
-}
-
-// Display cards for all players
-function displayHand(hand, toDo) {
-  let displayHandStr = "";
-  if (toDo == "showAll" || gameState == "stand") {
-    displayHandStr += `Points : ${computePoints(hand)} <br>`;
-  }
-  if (toDo == "showAll") {
-    for (let i = 0; i < hand.length; i++) {
-      // displayHandStr += `|| ${hand[i].name} of ${hand[i].suit}`;
-      displayHandStr += `<img src="${hand[i].img}" />`;
-    }
-  }
-  if (toDo == "hideOne") {
-    for (let i = 0; i < hand.length - 1; i++) {
-      // displayHandStr += `${hand[i].name} of ${hand[i].suit}  `;
-      displayHandStr += `<img src="${hand[i].img}" />`;
-    }
-    displayHandStr += `<img src="imgs/cardback.svg" />`;
-  }
-  return displayHandStr;
-}
-
-// Second Version: Add Player Hit or Stand - main2
 var main = function (input) {
-  // let displayPlayerHandStr = "";
-  // let displayComputerHandStr = "";
-  let myOutputValue = "";
-
-  if (deck.length == 0) {
-    return "No more card in the deck.";
-  }
-
-  if (gameState == "start") {
-    playerHand.push(deck.pop());
-    playerHand.push(deck.pop());
-    computerHand.push(deck.pop());
-    computerHand.push(deck.pop());
-    gameState = "waiting";
-    myOutputValue =
-      "Dealer hand: " +
-      `<br>` +
-      displayHand(computerHand, "hideOne") +
-      `<br>` +
-      `<br>` +
-      "Player hand: " +
-      `<br>` +
-      displayHand(playerHand, "showAll");
-  }
-
-  if (gameState == "hit") {
-    playerHand.push(deck.pop());
-    myOutputValue =
-      "Dealer hand: " +
-      `<br>` +
-      displayHand(computerHand, "hideOne") +
-      `<br>` +
-      `<br>` +
-      "Player hand: " +
-      `<br>` +
-      displayHand(playerHand, "showAll");
-    gameState = "waiting";
-  }
-
-  if (gameState == "stand") {
-    let playerHandPoint = computePoints(playerHand);
-    let computerHandPoint = computePoints(computerHand);
-    while (computerHandPoint < 17) {
-      let newCard = deck.pop();
-      computerHand.push(newCard);
-      computerHandPoint += newCard.rank;
-    }
-
-    myOutputValue =
-      "Dealer hand: " +
-      `<br>` +
-      displayHand(computerHand, "showAll") +
-      `<br>` +
-      `<br>` +
-      "Player hand: " +
-      `<br>` +
-      displayHand(playerHand, "showAll");
-
-    if (playerHandPoint > 21 && computerHandPoint <= 21)
-      myOutputValue += `<hr>` + "You are busted!" + " Dealer win!";
-    if (computerHandPoint > 21 && playerHandPoint <= 21)
-      myOutputValue += `<hr>` + "Dealer is busted!" + " Player win!";
-    if (playerHandPoint > 21 && computerHandPoint > 21)
-      myOutputValue += `<hr>` + "Both Player and Dealer are busted!";
-
-    if (playerHandPoint > computerHandPoint && playerHandPoint <= 21) {
-      myOutputValue += `<hr>` + "Player Win!";
-    } else if (playerHandPoint < computerHandPoint && computerHandPoint <= 21) {
-      myOutputValue += `<hr>` + "Dealer Win!";
-    } else if (playerHandPoint == computerHandPoint) {
-      myOutputValue += `<hr>` + "It's a tie!";
-    }
-  }
-
+  console.log(deck);
   return myOutputValue;
 };
