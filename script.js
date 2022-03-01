@@ -2,9 +2,12 @@
 - Create a shuffled deck
 
 - User input 1 - 6 players, click "start" to start the game
-  -- Players take turns to draw 2 cards face up(clockwise)
+  -- Players take turns to draw 2 cards face up
   -- Dealer(computer) draw 2 cards: 1st card face up, 2nd card face down
-  -- wait for each player's next move: "hit" or "stand"
+  -- Players take turns to "hit" or "stand" based on their hand:
+     --- If player is busted, then block the player
+     --- If player click "stand" and total point is <= 21, then wait next player to do "hit" or "stand"
+     --- Last player click "stand", reveal dealer's cards and show round results
   
 - If player choose "hit":
   -- Player draw 3rd card face up
@@ -83,7 +86,20 @@ function shuffleCards(cardDeck) {
   return cardDeck;
 }
 
+// Display player's table
+function displayTable(num) {
+  return;
+}
+
 var main = function (input) {
-  console.log(deck);
+  if (gameState == "preGame") {
+    let numOfPlayer = input;
+
+    displayTable(numOfPlayer);
+    const startBtn = document.querySelector("#start-button");
+    startBtn.style.display = "none";
+    const inputBlk = document.querySelector("#input");
+    inputBlk.style.display = "none";
+  }
   return myOutputValue;
 };
