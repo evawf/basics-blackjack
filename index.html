@@ -174,6 +174,18 @@
         top: 22px;
       }
 
+      #playerDiv {
+        display: flex;
+        flex-direction: row;
+        align-items: center;
+        justify-content: center;
+      }
+
+      .playerHand {
+        width: 200px;
+        height: 200px;
+      }
+
       /* increase header font size on wider screens */
       @media screen and (min-width: 600px) {
         .header {
@@ -201,30 +213,35 @@
     </h1>
     <h1 class="header">♣️ Blackjack ♠️</h1>
     <div id="container">
-      <input
-        id="input"
-        type="number"
-        placeholder="How many players?"
-        min="1"
-        max="6"
-      />
-      <br />
-      <button id="start-button">Start</button>
+      <form id="form" action="script.js" method="post">
+        <input
+          id="inputDiv"
+          type="number"
+          placeholder="How many players?"
+          min="1"
+          max="6"
+        />
+        <br />
+        <button id="start-button">Start</button>
+      </form>
+
       <div id="dealerHand">
         <p>Dealer Hand</p>
       </div>
-      <div id="playerHand"></div>
-      <div id="output-div"></div>
+      <div id="playerDiv"></div>
+      <div id="outputDiv"></div>
     </div>
     <!-- Import program logic -->
     <script src="script.js"></script>
     <!-- Define button click functionality -->
     <script>
-      var startBtn = document.querySelector("#start-button");
-      startBtn.addEventListener("click", function () {
-        var output = document.querySelector("#output-div");
-        var input = document.querySelector("#input");
-        output.innerHTML = main(input.value);
+      var form = document.querySelector("#form");
+      form.addEventListener("submit", function () {
+        event.preventDefault();
+        var inputDiv = document.querySelector("#inputDiv");
+        var outputDiv = document.querySelector("#outputDiv");
+        outputDiv.innerHTML = main(inputDiv.value);
+        inputDiv.value = "";
       });
     </script>
   </body>

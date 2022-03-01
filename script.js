@@ -1,20 +1,25 @@
 /*
 - Create a shuffled deck
 
-- User input 1 - 6 players, click "start" to start the game
-  -- Players take turns to draw 2 cards face up
-  -- Dealer(computer) draw 2 cards: 1st card face up, 2nd card face down
+- User input 1 - 6 players, click "start" to start
+  -- Input players' names, and show the game table
+  -- Players take turn to input their bets
+  -- Click "start round" to start play
+  -- Draw two cards for each player(face up) and dealer,  one of dealer's card face down
   -- Players take turns to "hit" or "stand" based on their hand:
      --- If player is busted, then block the player
-     --- If player click "stand" and total point is <= 21, then wait next player to do "hit" or "stand"
-     --- Last player click "stand", reveal dealer's cards and show round results
+     --- If player clicks "stand" and compute total point, if it is <= 21, then wait next player to do "hit" or "stand"
+     --- Last player click "stand"(unless the last player has blackjack, then skip "hit" or "stand"), reveal dealer's cards and show round results
+     --- If player has blackjack, player wins 1.5 times bet
   
 - If player choose "hit":
-  -- Player draw 3rd card face up
+  -- Player draw one or more card, until the total points is as high as possible but <= 21
+  -- If player's point >21, then busted, block player
 
 - If player choose "stand":
   -- Dealer: if Dealer's hand total value < 17, dealer must draw one more card, until the total value is >= 17
   -- Compare the total value of player hand and dealer hand, the highest value wins
+  -- Compute the winning points for each player
 
 - Reset game mode
 
@@ -86,20 +91,35 @@ function shuffleCards(cardDeck) {
   return cardDeck;
 }
 
-// Display player's table
-function displayTable(num) {
-  return;
-}
-
 var main = function (input) {
+  let myOutputValue = "";
   if (gameState == "preGame") {
     let numOfPlayer = input;
-
-    displayTable(numOfPlayer);
     const startBtn = document.querySelector("#start-button");
     startBtn.style.display = "none";
-    const inputBlk = document.querySelector("#input");
-    inputBlk.style.display = "none";
+
+    // Display Players
+    const playerDiv = document.querySelector("#playerDiv");
+    for (let i = 1; i <= numOfPlayer; i++) {
+      let player = document.createElement("div");
+      player.classList.add("playerHand");
+      player.innerHTML = `Player${[i]}`;
+      playerDiv.appendChild(player);
+      let amount = document.createElement("div");
+      amount.innerHTML = "Amount: 100";
+      player.appendChild(amount);
+    }
+    gameState = "inputPlayerName";
+  }
+
+  if (gameState == "inputPlayerName") {
+    console.log("coucou");
+    const inputDiv = document.querySelector("#inputDiv");
+    const playerHand = document.querySelectorAll(".playerHand");
+    console.log(playerHand);
+    for (let i = 1; i <= playerHand.length; i++) {
+      inputDiv.placeholder = `Name for player ${i}`;
+    }
   }
   return myOutputValue;
 };
