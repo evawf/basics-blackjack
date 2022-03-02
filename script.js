@@ -90,36 +90,62 @@ function shuffleCards(cardDeck) {
   }
   return cardDeck;
 }
+const startBtn = document.querySelector("#start-button");
+const playerDiv = document.querySelector("#playerDiv");
+const inputDiv = document.querySelector("#inputDiv");
+const outputDiv = document.querySelector("#outputDiv");
+const playerHandDiv = document.querySelectorAll(".playerHand");
+let numOfPlayers = 0;
 
 var main = function (input) {
   let myOutputValue = "";
   if (gameState == "preGame") {
-    let numOfPlayer = input;
-    const startBtn = document.querySelector("#start-button");
-    startBtn.style.display = "none";
-
+    numOfPlayers = input;
     // Display Players
-    const playerDiv = document.querySelector("#playerDiv");
-    for (let i = 1; i <= numOfPlayer; i++) {
+    for (let i = 1; i <= numOfPlayers; i++) {
       let player = document.createElement("div");
       player.classList.add("playerHand");
-      player.innerHTML = `Player${[i]}`;
+      player.innerHTML = `Player ${[i]}`;
       playerDiv.appendChild(player);
       let amount = document.createElement("div");
       amount.innerHTML = "Amount: 100";
       player.appendChild(amount);
+      let bet = document.createElement("input");
+      bet.type = "number";
+      bet.classList.add("bet");
+      bet.min = 1;
+      bet.max = 100;
+      player.appendChild(bet);
     }
-    gameState = "inputPlayerName";
+    inputDiv.style.display = "none";
+    startBtn.style.display = "none";
+    newHandBtn.style.display = "inline-block";
   }
 
-  if (gameState == "inputPlayerName") {
-    console.log("coucou");
-    const inputDiv = document.querySelector("#inputDiv");
-    const playerHand = document.querySelectorAll(".playerHand");
-    console.log(playerHand);
-    for (let i = 1; i <= playerHand.length; i++) {
-      inputDiv.placeholder = `Name for player ${i}`;
+  if (gameState == "newHand") {
+    const bet = document.querySelectorAll(".bet");
+    const playerHandDiv = document.querySelectorAll(".playerHand");
+
+    let betArr = [];
+    console.log(bet);
+    for (let i = 0; i < bet.length; i++) {
+      if (bet[i].value == "") {
+        myOutputValue = "Please input your bet!";
+      }
+      betArr.push(bet[i].value);
+      const showBet = document.createElement("div");
+      showBet.innerHTML = `Bet: ${bet[i].value}`;
+      playerHandDiv[i].appendChild(showBet);
+      bet[i].style.display = "none";
     }
+    console.log(betArr);
   }
+
   return myOutputValue;
 };
+
+const newHandBtn = document.getElementById("newHandBtn");
+newHandBtn.addEventListener("click", function () {
+  gameState = "newHand";
+  outputDiv.innerHTML = main(inputDiv.value);
+});
