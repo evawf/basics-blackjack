@@ -90,62 +90,12 @@ function shuffleCards(cardDeck) {
   }
   return cardDeck;
 }
-const startBtn = document.querySelector("#start-button");
-const playerDiv = document.querySelector("#playerDiv");
-const inputDiv = document.querySelector("#inputDiv");
-const outputDiv = document.querySelector("#outputDiv");
-const playerHandDiv = document.querySelectorAll(".playerHand");
-let numOfPlayers = 0;
 
-var main = function (input) {
-  let myOutputValue = "";
-  if (gameState == "preGame") {
-    numOfPlayers = input;
-    // Display Players
-    for (let i = 1; i <= numOfPlayers; i++) {
-      let player = document.createElement("div");
-      player.classList.add("playerHand");
-      player.innerHTML = `Player ${[i]}`;
-      playerDiv.appendChild(player);
-      let amount = document.createElement("div");
-      amount.innerHTML = "Amount: 100";
-      player.appendChild(amount);
-      let bet = document.createElement("input");
-      bet.type = "number";
-      bet.classList.add("bet");
-      bet.min = 1;
-      bet.max = 100;
-      player.appendChild(bet);
-    }
-    inputDiv.style.display = "none";
-    startBtn.style.display = "none";
-    newHandBtn.style.display = "inline-block";
-  }
-
-  if (gameState == "newHand") {
-    const bet = document.querySelectorAll(".bet");
-    const playerHandDiv = document.querySelectorAll(".playerHand");
-
-    let betArr = [];
-    console.log(bet);
-    for (let i = 0; i < bet.length; i++) {
-      if (bet[i].value == "") {
-        myOutputValue = "Please input your bet!";
-      }
-      betArr.push(bet[i].value);
-      const showBet = document.createElement("div");
-      showBet.innerHTML = `Bet: ${bet[i].value}`;
-      playerHandDiv[i].appendChild(showBet);
-      bet[i].style.display = "none";
-    }
-    console.log(betArr);
-  }
-
-  return myOutputValue;
-};
-
-const newHandBtn = document.getElementById("newHandBtn");
-newHandBtn.addEventListener("click", function () {
-  gameState = "newHand";
+var form = document.querySelector("#form");
+form.addEventListener("submit", function () {
+  event.preventDefault();
+  var inputDiv = document.querySelector("#inputDiv");
+  var outputDiv = document.querySelector("#outputDiv");
   outputDiv.innerHTML = main(inputDiv.value);
+  inputDiv.value = "";
 });
