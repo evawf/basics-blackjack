@@ -31,7 +31,8 @@ let deck = shuffleCards(makeDeck());
 function makeDeck() {
   // var makeDeck = function () {
   var cardDeck = [];
-  var suits = ["hearts", "diamonds", "clubs", "spades"];
+  // var suits = ["hearts", "diamonds", "clubs", "spades"];
+  var suits = ["♥️", "♦️", "♣️", "♠️"];
   var suitIdx = 0;
   while (suitIdx < suits.length) {
     var rankCounter = 1;
@@ -91,6 +92,9 @@ function shuffleCards(cardDeck) {
 let playerNamesArr = [];
 let numOfPlayers = 0;
 let playerNum = 0;
+let computerHand = [];
+let playerArr = [];
+let player = {};
 const inputField = document.getElementById("inputField");
 
 var main = function (input) {
@@ -106,7 +110,20 @@ var main = function (input) {
 };
 
 function deal() {
-  computerHand.push(deck.pop());
+  for (let i = 0; i < 2; i++) {
+    computerHand.push(deck.pop());
+    let playerIdx = 0;
+    while (playerIdx < numOfPlayers) {
+      player.name = playerNamesArr[playerIdx];
+      player.hand = deck.pop();
+      playerArr.push(player);
+      player = {};
+      playerIdx += 1;
+    }
+  }
+  console.log(computerHand);
+  console.log(playerArr);
+
   return "show cards";
 }
 
