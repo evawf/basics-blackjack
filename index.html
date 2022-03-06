@@ -102,25 +102,31 @@
     </h1>
     <h1 class="header">♣️ Blackjack ♠️</h1>
     <div id="container">
-      <form id="form" action="script.js" method="post">
+      <form id="form" action="" method="">
         <input
-          id="inputDiv"
+          id="inputField"
           type="number"
           placeholder="How many players?"
           min="1"
           max="6"
         />
         <br />
-        <button id="start-button">Start</button>
+        <button id="dealBtn" hidden>Deal</button>
       </form>
-
-      <div id="dealerHand" hidden>
-        <p>Dealer Hand</p>
-      </div>
-      <div id="playerDiv"></div>
-      <button id="newHandBtn" hidden>New Hand</button>
+      <div id="dealerHand" hidden></div>
+      <div id="playerHand"></div>
       <div id="outputDiv"></div>
     </div>
     <script src="script.js"></script>
+    <script>
+      var form = document.querySelector("#form");
+      form.addEventListener("submit", function (event) {
+        event.preventDefault();
+        var inputField = document.querySelector("#inputField");
+        var outputDiv = document.querySelector("#outputDiv");
+        outputDiv.innerHTML = main(inputField.value);
+        inputField.value = "";
+      });
+    </script>
   </body>
 </html>

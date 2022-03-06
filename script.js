@@ -22,12 +22,9 @@
   -- Compute the winning points for each player
 
 - Reset game mode
-
 */
 
-let gameState = "preGame";
-let playerHand = [];
-let computerHand = [];
+let gameState = "inputNumOfPlayers";
 let deck = shuffleCards(makeDeck());
 
 // Create all the cards
@@ -91,11 +88,53 @@ function shuffleCards(cardDeck) {
   return cardDeck;
 }
 
-var form = document.querySelector("#form");
-form.addEventListener("submit", function () {
-  event.preventDefault();
-  var inputDiv = document.querySelector("#inputDiv");
-  var outputDiv = document.querySelector("#outputDiv");
-  outputDiv.innerHTML = main(inputDiv.value);
-  inputDiv.value = "";
-});
+let playerNamesArr = [];
+let numOfPlayers = 0;
+let playerNum = 0;
+const inputField = document.getElementById("inputField");
+
+var main = function (input) {
+  if (gameState == "inputNumOfPlayers") {
+    return enterPlayerCount(input);
+  }
+  if (gameState == "enterPlayersName") {
+    return enterPlayersName(input);
+  }
+  if (gameState == "deal") {
+    return deal();
+  }
+};
+
+function deal() {
+  computerHand.push(deck.pop());
+  return "show cards";
+}
+
+// Enter Players' Name
+function enterPlayersName(input) {
+  inputField.type = "text";
+  inputField.placeholder = `Name`;
+  if (input) {
+    playerNamesArr[playerNum] = input;
+    console.log(playerNamesArr);
+    console.log(playerNum, numOfPlayers);
+    if (playerNum === numOfPlayers - 1) {
+      gameState = "deal";
+      dealBtn.style.display = "inline-block";
+      inputField.style.display = "none";
+      return `Click "Deal" to play!`;
+    }
+    playerNum += 1;
+  }
+  return `Please enter player ${playerNum + 1}'s name`;
+}
+
+// Enter how many players
+function enterPlayerCount(input) {
+  numOfPlayers = Number(input);
+  gameState = "enterPlayersName";
+  return (
+    `Welcome to Rocket Blackjack! <br>We have ${numOfPlayers} players joining this table.<hr>` +
+    enterPlayersName()
+  );
+}
