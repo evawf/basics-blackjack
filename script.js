@@ -217,24 +217,26 @@ function computePoints(hand) {
 
 // Displayer Dealer and Player's Hand
 function displayHand(hand, isDealer) {
-  // let point = 0;
   let cardImg = "";
   if (isDealer == "yes") {
-    for (let i = 0; i < hand.length - 1; i++) {
-      // point += hand[i].rank;
-      cardImg += `<img src="${hand[i].img}" />`;
-    }
-    cardImg += `<img src="imgs/cardback.svg" />`;
+    // Reveal Dealer Hand
     if (gameState == "stand") {
-      return `Dealer Hand<br>Point:${computePoints(
+      for (let i = 0; i < hand.length; i++) {
+        cardImg += `<img src="${hand[i].img}" />`;
+      }
+      return `Dealer Hand<br>Point: ${computePoints(
         hand
       )}<br>${cardImg}<br><hr>Players Hand: `;
     }
+    // Hide Dealer's second card;
+    for (let i = 0; i < hand.length - 1; i++) {
+      cardImg += `<img src="${hand[i].img}" />`;
+    }
+    cardImg += `<img src="imgs/cardback.svg" />`;
     return `Dealer Hand<br><br>${cardImg}<br><hr>Players Hand: `;
   }
   if (isDealer == "no") {
     for (let i = 0; i < hand.length; i++) {
-      // point += hand[i].rank;
       cardImg += `<img src="${hand[i].img}" />`;
     }
     return `Point: ${computePoints(hand)}<br>${cardImg}`;
@@ -243,7 +245,6 @@ function displayHand(hand, isDealer) {
 
 let playerIdx = 0;
 const playerHandDivs = document.getElementsByClassName("playerHand");
-console.log(playerHandDivs);
 var main = function (input) {
   if (gameState == "inputNumOfPlayers") return enterPlayerCount(input);
   if (gameState == "enterPlayersName") return enterPlayersName(input);
@@ -252,16 +253,31 @@ var main = function (input) {
   if (gameState == "hit") {
     let crtPlayerHand = playerArr[playerIdx].hand;
     crtPlayerHand.push(deck.pop());
-    console.log(crtPlayerHand);
     playerArr[playerIdx].hand = crtPlayerHand;
-    console.log(playerArr);
-    return `${playerArr[playerIdx].name} chose hit`;
+    let crtPlayerPoints = computePoints(playerArr[playerIdx].hand);
+    playerHandDivs[playerIdx].innerHTML = `<br>${
+      playerArr[playerIdx].name
+    }<br>${displayHand(playerArr[playerIdx].hand, "no")}`;
+
+    if (crtPlayerPoints > 21) {
+      hitBtn.style.display = "none";
+      playerHandDivs[playerIdx].style.filter = "blur(0.6px)";
+      playerHandDivs[playerIdx].style.border = "none";
+      return `${playerArr[playerIdx].name}, you are busted.`;
+    }
+    return `${playerArr[playerIdx].name}, you chose to hit.`;
   }
 
   if (gameState == "stand") {
+    hitBtn.style.display = "inline-block";
+
     if (playerIdx === playerArr.length - 1) {
       playerHandDivs[playerIdx].style.border = "none";
-      return "all player made choice.";
+      let dealerHandPoints = revealDealerHand(computerHandArr);
+      for (let i = 0; i < playerArr.length; i++) {
+        playerArr[i].points = computePoints(playerArr[i].hand);
+      }
+      return handleRoundResult(dealerHandPoints, playerArr);
     }
     playerIdx += 1;
     playerHandDivs[playerIdx].style.border = "solid";
@@ -271,3 +287,29 @@ var main = function (input) {
     }'s turn`;
   }
 };
+
+function revealDealerHand(hand) {
+  let dealerPoints = computePoints(hand);
+  while (dealerPoints < 17) {
+    hand.push(deck.pop());
+    dealerPoints = computePoints(hand);
+  }
+  dealerHandDiv.innerHTML = displayHand(hand, "yes");
+  return dealerPoints;
+}
+
+function handleRoundResult(dealer, players) {
+  for (let i = 0; i < players.length; i++) {
+    let crtPlayerPoint = players[i].point;
+    // Both dealer and player are busted
+    if (crtPlayerPoint > 21 && dealer > 21) {
+    }
+    // Only dealer bust
+    // Only player bust
+    // Both dealer and player point <= 21
+    if (crtPlayerPoint <= 21 && dealer <= 21) {
+    }
+    console.log(players);
+  }
+  return "Waiting for players' points";
+}
