@@ -31,8 +31,8 @@ let deck = shuffleCards(makeDeck());
 function makeDeck() {
   // var makeDeck = function () {
   var cardDeck = [];
-  // var suits = ["hearts", "diamonds", "clubs", "spades"];
-  var suits = ["♥️", "♦️", "♣️", "♠️"];
+  var suits = ["hearts", "diamonds", "clubs", "spades"];
+  // var suits = ["♥️", "♦️", "♣️", "♠️"];
   var suitIdx = 0;
   while (suitIdx < suits.length) {
     var rankCounter = 1;
@@ -92,39 +92,89 @@ function shuffleCards(cardDeck) {
 let playerNamesArr = [];
 let numOfPlayers = 0;
 let playerNum = 0;
-let computerHand = [];
+let computerHandArr = [];
 let playerArr = [];
-let player = {};
+let player = {
+  name: "",
+  hand: [],
+};
 const inputField = document.getElementById("inputField");
+const hitBtn = document.getElementById("hitBtn");
+const standBtn = document.getElementById("standBtn");
+const restartBtn = document.getElementById("restartBtn");
 
 var main = function (input) {
-  if (gameState == "inputNumOfPlayers") {
-    return enterPlayerCount(input);
-  }
-  if (gameState == "enterPlayersName") {
-    return enterPlayersName(input);
-  }
-  if (gameState == "deal") {
-    return deal();
-  }
+  if (gameState == "inputNumOfPlayers") return enterPlayerCount(input);
+  if (gameState == "enterPlayersName") return enterPlayersName(input);
+  if (gameState == "deal") return deal();
+  if (gameState == "hit") return computePoint();
 };
 
-function deal() {
-  for (let i = 0; i < 2; i++) {
-    computerHand.push(deck.pop());
-    let playerIdx = 0;
-    while (playerIdx < numOfPlayers) {
-      player.name = playerNamesArr[playerIdx];
-      player.hand = deck.pop();
-      playerArr.push(player);
-      player = {};
-      playerIdx += 1;
-    }
-  }
-  console.log(computerHand);
-  console.log(playerArr);
+function displayHand(hand, isDealer) {
+  let point = 0;
+  let cardImg = "";
 
-  return "show cards";
+  if (isDealer == "yes") {
+    for (let i = 0; i < hand.length - 1; i++) {
+      point += hand[i].rank;
+      cardImg += `<img src="${hand[i].img}" />`;
+    }
+    cardImg += `<img src="imgs/cardback.svg" />`;
+    if (gameState == "stand") {
+      return `Dealer Hand<br>Point:${point}<br>${cardImg}<br><hr>Players Hand: `;
+    }
+    return `Dealer Hand<br><br>${cardImg}<br><hr>Players Hand: `;
+  }
+  if (isDealer == "no") {
+    for (let i = 0; i < hand.length; i++) {
+      point += hand[i].rank;
+      cardImg += `<img src="${hand[i].img}" />`;
+    }
+    return `Point: ${point}<br>${cardImg}`;
+  }
+}
+
+// Distribute cards to dealer and players hand
+function deal() {
+  dealBtn.style.display = "none";
+  hitBtn.style.display = "inline-block";
+  standBtn.style.display = "inline-block";
+  restartBtn.style.display = "inline-block";
+
+  computerHandArr.push(deck.pop());
+  computerHandArr.push(deck.pop());
+
+  const dealerHandDiv = document.getElementById("dealerHandDiv");
+  dealerHandDiv.innerHTML = displayHand(computerHandArr, "yes");
+
+  let playerCardArr = [];
+  let playerIdx = 0;
+  while (playerIdx < numOfPlayers) {
+    player.name = playerNamesArr[playerIdx];
+    playerCardArr.push(deck.pop());
+    playerCardArr.push(deck.pop());
+    player.hand = playerCardArr;
+    playerArr.push(player);
+    player = {};
+    playerCardArr = [];
+    playerIdx += 1;
+  }
+  console.log(computerHandArr);
+  console.log(playerArr);
+  const playerHandDiv = document.getElementById("playerHandDiv");
+
+  for (let i = 0; i < playerArr.length; i++) {
+    const handDiv = document.createElement("div");
+    handDiv.id = `Player${i}`;
+    handDiv.classList.add("playerHand");
+    handDiv.innerHTML = `<br>${playerArr[i].name}<br>${displayHand(
+      playerArr[i].hand,
+      "no"
+    )}`;
+    playerHandDiv.appendChild(handDiv);
+  }
+
+  return `Please click "Hit" or "Stand". <br> `;
 }
 
 // Enter Players' Name
@@ -133,8 +183,6 @@ function enterPlayersName(input) {
   inputField.placeholder = `Name`;
   if (input) {
     playerNamesArr[playerNum] = input;
-    console.log(playerNamesArr);
-    console.log(playerNum, numOfPlayers);
     if (playerNum === numOfPlayers - 1) {
       gameState = "deal";
       dealBtn.style.display = "inline-block";
@@ -151,7 +199,7 @@ function enterPlayerCount(input) {
   numOfPlayers = Number(input);
   gameState = "enterPlayersName";
   return (
-    `Welcome to Rocket Blackjack! <br>We have ${numOfPlayers} players joining this table.<hr>` +
+    `Welcome to Rocket Blackjack Table! <br>We have ${numOfPlayers} players joining this table.<hr>` +
     enterPlayersName()
   );
 }
