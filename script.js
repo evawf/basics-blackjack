@@ -1,7 +1,6 @@
 /*
 - Create a shuffled deck
-
-- User input 1 - 6 players, click "start" to start
+- Input 1 - 6 players:
   -- Input players' names, and show the game table
   -- Players take turn to input their bets
   -- Click "start round" to start play
@@ -98,12 +97,14 @@ let player = {
   name: "",
   hand: [],
 };
+let playerIdx = 0;
 const inputField = document.getElementById("inputField");
 const hitBtn = document.getElementById("hitBtn");
 const standBtn = document.getElementById("standBtn");
 const restartBtn = document.getElementById("restartBtn");
 const playerHandDiv = document.getElementById("playerHandDiv");
 const dealerHandDiv = document.getElementById("dealerHandDiv");
+const playerHandDivs = document.getElementsByClassName("playerHand");
 
 restartBtn.addEventListener("click", function () {
   location.reload();
@@ -155,12 +156,10 @@ function deal() {
   dealBtn.style.display = "none";
   hitBtn.style.display = "inline-block";
   standBtn.style.display = "inline-block";
-  restartBtn.style.display = "inline-block";
 
   computerHandArr.push(deck.pop());
   computerHandArr.push(deck.pop());
-
-  // const dealerHandDiv = document.getElementById("dealerHandDiv");
+  // Display dealer's hand
   dealerHandDiv.innerHTML = displayHand(computerHandArr, "yes");
 
   let playerCardArr = [];
@@ -177,7 +176,6 @@ function deal() {
   }
   console.log(computerHandArr);
   console.log(playerArr);
-  // const playerHandDiv = document.getElementById("playerHandDiv");
 
   for (let i = 0; i < playerArr.length; i++) {
     const handDiv = document.createElement("div");
@@ -242,8 +240,7 @@ function displayHand(hand, isDealer) {
   }
 }
 
-let playerIdx = 0;
-const playerHandDivs = document.getElementsByClassName("playerHand");
+// Main function
 var main = function (input) {
   if (gameState == "inputNumOfPlayers") return enterPlayerCount(input);
   if (gameState == "enterPlayersName") return enterPlayersName(input);
@@ -269,8 +266,11 @@ var main = function (input) {
 
   if (gameState == "stand") {
     hitBtn.style.display = "inline-block";
+
     if (playerIdx === playerArr.length - 1) {
       playerHandDivs[playerIdx].style.border = "none";
+      restartBtn.style.display = "inline-block";
+
       hitBtn.style.display = "none";
       standBtn.style.display = "none";
       let dealerHandPoints = revealDealerHand(computerHandArr);
@@ -288,6 +288,7 @@ var main = function (input) {
   }
 };
 
+// Draw cards for dealer if dealer's points < 17, then display dealer hand
 function revealDealerHand(hand) {
   let dealerPoints = computePoints(hand);
   while (dealerPoints < 17) {
@@ -308,10 +309,10 @@ function handleRoundResult(dealerHandPoints, playersHand) {
       crtPlayerPoints = playersHand[i].points;
       console.log(crtPlayerPoints);
       if (crtPlayerPoints > 21) {
-        playersHand[i].winOrLoose -= 1;
+        playersHand[i].winOrLoose = -1;
         outputStr += `${playersHand[i].name} has ${crtPlayerPoints} points, got busted, 1 chip lost!<br>`;
       } else if (crtPlayerPoints <= 21) {
-        playersHand[i].winOrLoose += 1;
+        playersHand[i].winOrLoose = 1;
         outputStr += `${playersHand[i].name} has ${crtPlayerPoints} points, win 1 chip.<br>`;
       }
     }
@@ -323,22 +324,18 @@ function handleRoundResult(dealerHandPoints, playersHand) {
       crtPlayerPoints = playersHand[i].points;
       console.log(crtPlayerPoints);
       if (crtPlayerPoints > 21) {
-        playersHand[i].winOrLoose -= 1;
+        playersHand[i].winOrLoose = -1;
         outputStr += `${playersHand[i].name} has ${crtPlayerPoints} points, got busted, 1 chip lost!<br>`;
       } else if (crtPlayerPoints < dealerHandPoints) {
-        playersHand[i].winOrLoose -= 1;
+        playersHand[i].winOrLoose = -1;
         outputStr += `${playersHand[i].name} has ${crtPlayerPoints} points, 1 chip lost!<br>`;
       } else if (crtPlayerPoints > dealerHandPoints) {
-        playersHand[i].winOrLoose += 1;
+        playersHand[i].winOrLoose = 1;
         outputStr += `${playersHand[i].name} has ${crtPlayerPoints} points, win 1 chip.<br>`;
       } else {
         outputStr += `${playersHand[i].name} has ${crtPlayerPoints} points, got 0 chip.<br>`;
       }
     }
   }
-
-  console.log(playersHand);
-  console.log(playerArr);
-
   return outputStr;
 }
