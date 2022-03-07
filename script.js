@@ -102,36 +102,52 @@ const inputField = document.getElementById("inputField");
 const hitBtn = document.getElementById("hitBtn");
 const standBtn = document.getElementById("standBtn");
 const restartBtn = document.getElementById("restartBtn");
+const playerHandDiv = document.getElementById("playerHandDiv");
+const dealerHandDiv = document.getElementById("dealerHandDiv");
 
-var main = function (input) {
-  if (gameState == "inputNumOfPlayers") return enterPlayerCount(input);
-  if (gameState == "enterPlayersName") return enterPlayersName(input);
-  if (gameState == "deal") return deal();
-  if (gameState == "hit") return computePoint();
-};
+restartBtn.addEventListener("click", function () {
+  location.reload();
+});
 
-function displayHand(hand, isDealer) {
-  let point = 0;
-  let cardImg = "";
+hitBtn.addEventListener("click", function () {
+  gameState = "hit";
+  outputDiv.innerHTML = main();
+});
 
-  if (isDealer == "yes") {
-    for (let i = 0; i < hand.length - 1; i++) {
-      point += hand[i].rank;
-      cardImg += `<img src="${hand[i].img}" />`;
-    }
-    cardImg += `<img src="imgs/cardback.svg" />`;
-    if (gameState == "stand") {
-      return `Dealer Hand<br>Point:${point}<br>${cardImg}<br><hr>Players Hand: `;
-    }
-    return `Dealer Hand<br><br>${cardImg}<br><hr>Players Hand: `;
+standBtn.addEventListener("click", function () {
+  gameState = "stand";
+  outputDiv.innerHTML = main();
+});
+
+// Enter how many players
+function enterPlayerCount(input) {
+  if (input != "") {
+    numOfPlayers = Number(input.trim());
+    gameState = "enterPlayersName";
+    return (
+      `Welcome to Rocket Blackjack Table! <br>We have ${numOfPlayers} players joining this table.<hr>` +
+      enterPlayersName()
+    );
+  } else {
+    return "Please enter a number from 1 to 6!";
   }
-  if (isDealer == "no") {
-    for (let i = 0; i < hand.length; i++) {
-      point += hand[i].rank;
-      cardImg += `<img src="${hand[i].img}" />`;
+}
+
+// Enter Players' Name
+function enterPlayersName(input) {
+  inputField.type = "text";
+  inputField.placeholder = `Name`;
+  if (input) {
+    playerNamesArr[playerNum] = input.trim();
+    if (playerNum === numOfPlayers - 1) {
+      gameState = "deal";
+      dealBtn.style.display = "inline-block";
+      inputField.style.display = "none";
+      return `Click "Deal" to play!`;
     }
-    return `Point: ${point}<br>${cardImg}`;
+    playerNum += 1;
   }
+  return `Please enter player ${playerNum + 1}'s name`;
 }
 
 // Distribute cards to dealer and players hand
@@ -144,7 +160,7 @@ function deal() {
   computerHandArr.push(deck.pop());
   computerHandArr.push(deck.pop());
 
-  const dealerHandDiv = document.getElementById("dealerHandDiv");
+  // const dealerHandDiv = document.getElementById("dealerHandDiv");
   dealerHandDiv.innerHTML = displayHand(computerHandArr, "yes");
 
   let playerCardArr = [];
@@ -161,11 +177,11 @@ function deal() {
   }
   console.log(computerHandArr);
   console.log(playerArr);
-  const playerHandDiv = document.getElementById("playerHandDiv");
+  // const playerHandDiv = document.getElementById("playerHandDiv");
 
   for (let i = 0; i < playerArr.length; i++) {
     const handDiv = document.createElement("div");
-    handDiv.id = `Player${i}`;
+    handDiv.id = `player${i}`;
     handDiv.classList.add("playerHand");
     handDiv.innerHTML = `<br>${playerArr[i].name}<br>${displayHand(
       playerArr[i].hand,
@@ -173,33 +189,85 @@ function deal() {
     )}`;
     playerHandDiv.appendChild(handDiv);
   }
+  const playerOne = document.getElementById("player0");
+  playerOne.style.border = "solid";
 
-  return `Please click "Hit" or "Stand". <br> `;
+  return `${playerArr[0].name}, please click "Hit" or "Stand". <br> `;
 }
 
-// Enter Players' Name
-function enterPlayersName(input) {
-  inputField.type = "text";
-  inputField.placeholder = `Name`;
-  if (input) {
-    playerNamesArr[playerNum] = input;
-    if (playerNum === numOfPlayers - 1) {
-      gameState = "deal";
-      dealBtn.style.display = "inline-block";
-      inputField.style.display = "none";
-      return `Click "Deal" to play!`;
-    }
-    playerNum += 1;
+// Calculate Dealer or Players' Point
+function computePoints(hand) {
+  // Ace is 11
+  let points = 0;
+  for (let i = 0; i < hand.length; i++) {
+    let currentValue = hand[i].rank;
+    if (currentValue === 1) currentValue = 11;
+    points += currentValue;
   }
-  return `Please enter player ${playerNum + 1}'s name`;
+  if (points <= 21) {
+    return points;
+  } else {
+    points = 0;
+    for (let i = 0; i < hand.length; i++) {
+      points += hand[i].rank;
+    }
+    return points;
+  }
 }
 
-// Enter how many players
-function enterPlayerCount(input) {
-  numOfPlayers = Number(input);
-  gameState = "enterPlayersName";
-  return (
-    `Welcome to Rocket Blackjack Table! <br>We have ${numOfPlayers} players joining this table.<hr>` +
-    enterPlayersName()
-  );
+// Displayer Dealer and Player's Hand
+function displayHand(hand, isDealer) {
+  // let point = 0;
+  let cardImg = "";
+  if (isDealer == "yes") {
+    for (let i = 0; i < hand.length - 1; i++) {
+      // point += hand[i].rank;
+      cardImg += `<img src="${hand[i].img}" />`;
+    }
+    cardImg += `<img src="imgs/cardback.svg" />`;
+    if (gameState == "stand") {
+      return `Dealer Hand<br>Point:${computePoints(
+        hand
+      )}<br>${cardImg}<br><hr>Players Hand: `;
+    }
+    return `Dealer Hand<br><br>${cardImg}<br><hr>Players Hand: `;
+  }
+  if (isDealer == "no") {
+    for (let i = 0; i < hand.length; i++) {
+      // point += hand[i].rank;
+      cardImg += `<img src="${hand[i].img}" />`;
+    }
+    return `Point: ${computePoints(hand)}<br>${cardImg}`;
+  }
 }
+
+let playerIdx = 0;
+const playerHandDivs = document.getElementsByClassName("playerHand");
+console.log(playerHandDivs);
+var main = function (input) {
+  if (gameState == "inputNumOfPlayers") return enterPlayerCount(input);
+  if (gameState == "enterPlayersName") return enterPlayersName(input);
+  if (gameState == "deal") return deal();
+
+  if (gameState == "hit") {
+    let crtPlayerHand = playerArr[playerIdx].hand;
+    crtPlayerHand.push(deck.pop());
+    console.log(crtPlayerHand);
+    playerArr[playerIdx].hand = crtPlayerHand;
+    console.log(playerArr);
+    return `${playerArr[playerIdx].name} chose hit`;
+  }
+
+  if (gameState == "stand") {
+    if (playerIdx === playerArr.length - 1) {
+      playerHandDivs[playerIdx].style.border = "none";
+      return "all player made choice.";
+    }
+    playerIdx += 1;
+    playerHandDivs[playerIdx].style.border = "solid";
+    playerHandDivs[playerIdx - 1].style.border = "none";
+    return `${playerArr[playerIdx - 1].name} chose stand, ${
+      playerArr[playerIdx].name
+    }'s turn`;
+  }
+};
