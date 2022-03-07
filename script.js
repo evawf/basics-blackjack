@@ -8,7 +8,7 @@
   -- Draw two cards for each player(face up) and dealer,  one of dealer's card face down
   -- Players take turns to "hit" or "stand" based on their hand:
      --- If player is busted, then block the player
-     --- If player clicks "stand" and compute total point, if it is <= 21, then wait next player to do "hit" or "stand"
+     --- If player clicks "stand" and compute total points, if it is <= 21, then wait next player to do "hit" or "stand"
      --- Last player click "stand"(unless the last player has blackjack, then skip "hit" or "stand"), reveal dealer's cards and show round results
      --- If player has blackjack, player wins 1.5 times bet
   
@@ -191,7 +191,6 @@ function deal() {
   }
   const playerOne = document.getElementById("player0");
   playerOne.style.border = "solid";
-
   return `${playerArr[0].name}, please click "Hit" or "Stand". <br> `;
 }
 
@@ -270,9 +269,10 @@ var main = function (input) {
 
   if (gameState == "stand") {
     hitBtn.style.display = "inline-block";
-
     if (playerIdx === playerArr.length - 1) {
       playerHandDivs[playerIdx].style.border = "none";
+      hitBtn.style.display = "none";
+      standBtn.style.display = "none";
       let dealerHandPoints = revealDealerHand(computerHandArr);
       for (let i = 0; i < playerArr.length; i++) {
         playerArr[i].points = computePoints(playerArr[i].hand);
@@ -298,18 +298,47 @@ function revealDealerHand(hand) {
   return dealerPoints;
 }
 
-function handleRoundResult(dealer, players) {
-  for (let i = 0; i < players.length; i++) {
-    let crtPlayerPoint = players[i].point;
-    // Both dealer and player are busted
-    if (crtPlayerPoint > 21 && dealer > 21) {
+function handleRoundResult(dealerHandPoints, playersHand) {
+  let outputStr = "";
+  let crtPlayerPoints = 0;
+  // If dealer is busted
+  if (dealerHandPoints > 21) {
+    outputStr = `Dealer is busted.<br>`;
+    for (let i = 0; i < playersHand.length; i++) {
+      crtPlayerPoints = playersHand[i].points;
+      console.log(crtPlayerPoints);
+      if (crtPlayerPoints > 21) {
+        playersHand[i].winOrLoose -= 1;
+        outputStr += `${playersHand[i].name} has ${crtPlayerPoints} points, got busted, 1 chip lost!<br>`;
+      } else if (crtPlayerPoints <= 21) {
+        playersHand[i].winOrLoose += 1;
+        outputStr += `${playersHand[i].name} has ${crtPlayerPoints} points, win 1 chip.<br>`;
+      }
     }
-    // Only dealer bust
-    // Only player bust
-    // Both dealer and player point <= 21
-    if (crtPlayerPoint <= 21 && dealer <= 21) {
-    }
-    console.log(players);
   }
-  return "Waiting for players' points";
+  // If dealer points <= 21
+  if (dealerHandPoints <= 21) {
+    outputStr = `Dealer has ${dealerHandPoints} points.<br>`;
+    for (let i = 0; i < playersHand.length; i++) {
+      crtPlayerPoints = playersHand[i].points;
+      console.log(crtPlayerPoints);
+      if (crtPlayerPoints > 21) {
+        playersHand[i].winOrLoose -= 1;
+        outputStr += `${playersHand[i].name} has ${crtPlayerPoints} points, got busted, 1 chip lost!<br>`;
+      } else if (crtPlayerPoints < dealerHandPoints) {
+        playersHand[i].winOrLoose -= 1;
+        outputStr += `${playersHand[i].name} has ${crtPlayerPoints} points, 1 chip lost!<br>`;
+      } else if (crtPlayerPoints > dealerHandPoints) {
+        playersHand[i].winOrLoose += 1;
+        outputStr += `${playersHand[i].name} has ${crtPlayerPoints} points, win 1 chip.<br>`;
+      } else {
+        outputStr += `${playersHand[i].name} has ${crtPlayerPoints} points, got 0 chip.<br>`;
+      }
+    }
+  }
+
+  console.log(playersHand);
+  console.log(playerArr);
+
+  return outputStr;
 }
