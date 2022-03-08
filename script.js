@@ -105,6 +105,7 @@ const restartBtn = document.getElementById("restartBtn");
 const playerHandDiv = document.getElementById("playerHandDiv");
 const dealerHandDiv = document.getElementById("dealerHandDiv");
 const playerHandDivs = document.getElementsByClassName("playerHand");
+const continueBtn = document.getElementById("continueBtn");
 
 restartBtn.addEventListener("click", function () {
   location.reload();
@@ -117,6 +118,24 @@ hitBtn.addEventListener("click", function () {
 
 standBtn.addEventListener("click", function () {
   gameState = "stand";
+  outputDiv.innerHTML = main();
+});
+
+continueBtn.addEventListener("click", function () {
+  playerIdx = 0;
+  outputDiv.innerHTML = "";
+  playerHandDiv.innerHTML = "";
+  dealerHandDiv.innerHTML = "";
+  continueBtn.style.display = "none";
+  restartBtn.style.display = "none";
+
+  for (let i = 0; i < playerArr.length; i++) {
+    playerArr[i].hand = [];
+    playerArr[i].points = 0;
+    playerArr[i].winOrLoose = 0;
+  }
+  computerHandArr = [];
+  gameState = "deal";
   outputDiv.innerHTML = main();
 });
 
@@ -162,19 +181,28 @@ function deal() {
   // Display dealer's hand, one card face down
   dealerHandDiv.innerHTML = displayPointsAndCards(computerHandArr, "yes");
 
-  // Deal card to players' hand
-  let playerCardArr = [];
-  let playerIdx = 0;
-  while (playerIdx < numOfPlayers) {
-    player.name = playerNamesArr[playerIdx];
-    playerCardArr.push(deck.pop());
-    playerCardArr.push(deck.pop());
-    player.hand = playerCardArr;
-    player.chips = 100;
-    playerArr.push(player);
-    player = {};
-    playerCardArr = [];
-    playerIdx += 1;
+  //If no player, add name, cards, chips to player array
+  if (playerArr == "") {
+    let playerCardArr = [];
+    let playerIdx = 0;
+    while (playerIdx < numOfPlayers) {
+      player.name = playerNamesArr[playerIdx];
+      playerCardArr.push(deck.pop());
+      playerCardArr.push(deck.pop());
+      player.hand = playerCardArr;
+      player.chips = 100;
+      playerArr.push(player);
+      player = {};
+      playerCardArr = [];
+      playerIdx += 1;
+    }
+  } else {
+    // If player, add cards
+    for (let i = 0; i < playerArr.length; i++) {
+      let crtHand = playerArr[i].hand;
+      crtHand.push(deck.pop());
+      crtHand.push(deck.pop());
+    }
   }
 
   console.log(playerArr);
@@ -277,6 +305,7 @@ var main = function (input) {
       restartBtn.style.display = "inline-block";
       hitBtn.style.display = "none";
       standBtn.style.display = "none";
+      continueBtn.style.display = "inline-block";
 
       let dealerHandPoints = revealDealerHand(computerHandArr);
       // Add points key&value to player
@@ -340,6 +369,7 @@ function handleRoundResult(dealerHandPoints, playersHand) {
         playersHand[i].winOrLoose = 1;
         outputStr += `${playersHand[i].name} has ${crtPlayerPoints} points, win 1 chip.<br>`;
       } else {
+        playersHand[i].winOrLoose = 0;
         outputStr += `${playersHand[i].name} has ${crtPlayerPoints} points, got 0 chip.<br>`;
       }
     }
@@ -353,12 +383,13 @@ function handleRoundResult(dealerHandPoints, playersHand) {
       playerArr[i].winOrLoose
     }<br>${displayPointsAndCards(playerArr[i].hand, "no")}`;
   }
-
   return outputStr;
 }
 
 // Compute chips for each player
 function computeChips(playerHand) {
+  let crtChips = playerHand.chips + playerHand.winOrLoose;
+  playerHand.chips = crtChips;
   console.log(playerHand);
-  return playerHand.chips + playerHand.winOrLoose;
+  return crtChips;
 }
