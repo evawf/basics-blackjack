@@ -119,14 +119,7 @@
         <br />
         <button id="dealBtn" hidden>Deal</button>
       </form>
-      <iframe
-        src="https://giphy.com/embed/l2Sq2mPVJr4tfk436"
-        width="480"
-        height="338"
-        frameborder="0"
-        class="giphy-embed"
-        allowfullscreen
-      ></iframe>
+      <iframe id="gif" src="https://giphy.com/embed/l2Sq2mPVJr4tfk436"></iframe>
       <div id="outputDiv"></div>
       <button id="hitBtn" hidden>Hit</button>
       <button id="standBtn" hidden>Stand</button>
@@ -134,10 +127,13 @@
       <button id="continueBtn" hidden>Continue</button>
       <div id="dealerHandDiv"></div>
       <div id="playerHandDiv"></div>
+      <div>
+        <audio autoplay controls id="backgroundMusic">
+          <source src="Night-in-Venice.mp3" type="audio/mp3" />
+        </audio>
+      </div>
     </div>
-    <audio autoplay controls id="music">
-      <source src="Night-in-Venice.mp3" type="audio/mp3" />
-    </audio>
+
     <script src="script.js"></script>
     <script>
       var form = document.querySelector("#form");

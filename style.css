@@ -99,13 +99,25 @@ button:hover {
   margin-bottom: 10px;
 }
 
-.bet {
-  width: 100px;
+#backgroundMusic {
+  width: 180px;
+  height: 25px;
+  margin: 10px 0 0 0;
+}
+
+#gif {
+  width: 200px;
+  border: none;
 }
 
 /* increase header font size on wider screens */
 @media screen and (min-width: 600px) {
   .header {
     font-size: 2rem;
+  }
+
+  #gif {
+    width: 600px;
+    height: 300px;
   }
 }

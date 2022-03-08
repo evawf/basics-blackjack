@@ -106,6 +106,7 @@ const playerHandDiv = document.getElementById("playerHandDiv");
 const dealerHandDiv = document.getElementById("dealerHandDiv");
 const playerHandDivs = document.getElementsByClassName("playerHand");
 const continueBtn = document.getElementById("continueBtn");
+const gif = document.getElementById("gif");
 
 restartBtn.addEventListener("click", function () {
   location.reload();
@@ -175,6 +176,7 @@ function deal() {
   dealBtn.style.display = "none";
   hitBtn.style.display = "inline-block";
   standBtn.style.display = "inline-block";
+  gif.style.display = "none";
 
   computerHandArr.push(deck.pop());
   computerHandArr.push(deck.pop());
