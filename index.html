@@ -101,10 +101,12 @@
       />
     </h1>
     <h1 class="header">♣️ Blackjack Table ♠️</h1>
-    <h4 style="color: red; text-align: center">BLACK JACK PAYS 3 To 2</h4>
-    <h5 style="text-align: center">
+    <h4 style="color: red; text-align: center; margin: 0">
+      BLACK JACK PAYS 3 To 2
+    </h4>
+    <p style="text-align: center; margin: 0">
       Dealer must draw to 16, and stand on all 17's
-    </h5>
+    </p>
     <div id="container">
       <form id="form" action="" method="">
         <input
@@ -117,6 +119,14 @@
         <br />
         <button id="dealBtn" hidden>Deal</button>
       </form>
+      <iframe
+        src="https://giphy.com/embed/l2Sq2mPVJr4tfk436"
+        width="480"
+        height="338"
+        frameborder="0"
+        class="giphy-embed"
+        allowfullscreen
+      ></iframe>
       <div id="outputDiv"></div>
       <button id="hitBtn" hidden>Hit</button>
       <button id="standBtn" hidden>Stand</button>
@@ -125,6 +135,9 @@
       <div id="dealerHandDiv"></div>
       <div id="playerHandDiv"></div>
     </div>
+    <audio autoplay controls id="music">
+      <source src="Night-in-Venice.mp3" type="audio/mp3" />
+    </audio>
     <script src="script.js"></script>
     <script>
       var form = document.querySelector("#form");
