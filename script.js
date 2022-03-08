@@ -225,6 +225,7 @@ function deal() {
 
 // Calculate Dealer or Players' Points
 function computePoints(hand) {
+  console.log(hand);
   // Ace is 11
   let points = 0;
   for (let i = 0; i < hand.length; i++) {
@@ -254,14 +255,14 @@ function displayPointsAndCards(hand, isDealer) {
       }
       return `Dealer Hand<br>Points: ${computePoints(
         hand
-      )}<br>${cardImg}<br><img src="line.png" /><br>Players Hand: `;
+      )}<br>${cardImg}<br><hr>Players Hand `;
     }
     // Hide Dealer's second card;
     for (let i = 0; i < hand.length - 1; i++) {
       cardImg += `<img src="${hand[i].img}" />`;
     }
     cardImg += `<img src="imgs/cardback.svg" />`;
-    return `Dealer Hand<br><br>${cardImg}<br><img src="line.png" /><br>Players Hand: `;
+    return `Dealer Hand<br><br>${cardImg}<br><hr>Players Hand `;
   }
   if (isDealer == "no") {
     for (let i = 0; i < hand.length; i++) {
