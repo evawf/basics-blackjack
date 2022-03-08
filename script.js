@@ -159,9 +159,10 @@ function deal() {
 
   computerHandArr.push(deck.pop());
   computerHandArr.push(deck.pop());
-  // Display dealer's hand
-  dealerHandDiv.innerHTML = displayHand(computerHandArr, "yes");
+  // Display dealer's hand, one card face down
+  dealerHandDiv.innerHTML = displayPointsAndCards(computerHandArr, "yes");
 
+  // Deal card to players' hand
   let playerCardArr = [];
   let playerIdx = 0;
   while (playerIdx < numOfPlayers) {
@@ -169,22 +170,23 @@ function deal() {
     playerCardArr.push(deck.pop());
     playerCardArr.push(deck.pop());
     player.hand = playerCardArr;
+    player.chips = 100;
     playerArr.push(player);
     player = {};
     playerCardArr = [];
     playerIdx += 1;
   }
-  console.log(computerHandArr);
+
   console.log(playerArr);
 
+  // Display player's hand
   for (let i = 0; i < playerArr.length; i++) {
     const handDiv = document.createElement("div");
     handDiv.id = `player${i}`;
     handDiv.classList.add("playerHand");
-    handDiv.innerHTML = `<br>${playerArr[i].name}<br>${displayHand(
-      playerArr[i].hand,
-      "no"
-    )}`;
+    handDiv.innerHTML = `<br>${playerArr[i].name}<br>Chips: ${
+      playerArr[i].chips
+    }<br>${displayPointsAndCards(playerArr[i].hand, "no")}`;
     playerHandDiv.appendChild(handDiv);
   }
   const playerOne = document.getElementById("player0");
@@ -192,7 +194,7 @@ function deal() {
   return `${playerArr[0].name}, please click "Hit" or "Stand". <br> `;
 }
 
-// Calculate Dealer or Players' Point
+// Calculate Dealer or Players' Points
 function computePoints(hand) {
   // Ace is 11
   let points = 0;
@@ -213,7 +215,7 @@ function computePoints(hand) {
 }
 
 // Displayer Dealer and Player's Hand
-function displayHand(hand, isDealer) {
+function displayPointsAndCards(hand, isDealer) {
   let cardImg = "";
   if (isDealer == "yes") {
     // Reveal Dealer Hand
@@ -221,7 +223,7 @@ function displayHand(hand, isDealer) {
       for (let i = 0; i < hand.length; i++) {
         cardImg += `<img src="${hand[i].img}" />`;
       }
-      return `Dealer Hand<br>Point: ${computePoints(
+      return `Dealer Hand<br>Points: ${computePoints(
         hand
       )}<br>${cardImg}<br><hr>Players Hand: `;
     }
@@ -236,7 +238,7 @@ function displayHand(hand, isDealer) {
     for (let i = 0; i < hand.length; i++) {
       cardImg += `<img src="${hand[i].img}" />`;
     }
-    return `Point: ${computePoints(hand)}<br>${cardImg}`;
+    return `Points: ${computePoints(hand)}<br>${cardImg}`;
   }
 }
 
@@ -251,9 +253,13 @@ var main = function (input) {
     crtPlayerHand.push(deck.pop());
     playerArr[playerIdx].hand = crtPlayerHand;
     let crtPlayerPoints = computePoints(playerArr[playerIdx].hand);
+    console.log(playerArr);
     playerHandDivs[playerIdx].innerHTML = `<br>${
       playerArr[playerIdx].name
-    }<br>${displayHand(playerArr[playerIdx].hand, "no")}`;
+    }<br>Chips: ${playerArr[playerIdx].chips}<br>${displayPointsAndCards(
+      playerArr[playerIdx].hand,
+      "no"
+    )}`;
 
     if (crtPlayerPoints > 21) {
       hitBtn.style.display = "none";
@@ -266,14 +272,14 @@ var main = function (input) {
 
   if (gameState == "stand") {
     hitBtn.style.display = "inline-block";
-
     if (playerIdx === playerArr.length - 1) {
       playerHandDivs[playerIdx].style.border = "none";
       restartBtn.style.display = "inline-block";
-
       hitBtn.style.display = "none";
       standBtn.style.display = "none";
+
       let dealerHandPoints = revealDealerHand(computerHandArr);
+      // Add points key&value to player
       for (let i = 0; i < playerArr.length; i++) {
         playerArr[i].points = computePoints(playerArr[i].hand);
       }
@@ -295,10 +301,11 @@ function revealDealerHand(hand) {
     hand.push(deck.pop());
     dealerPoints = computePoints(hand);
   }
-  dealerHandDiv.innerHTML = displayHand(hand, "yes");
+  dealerHandDiv.innerHTML = displayPointsAndCards(hand, "yes");
   return dealerPoints;
 }
 
+// Check if player win or loose
 function handleRoundResult(dealerHandPoints, playersHand) {
   let outputStr = "";
   let crtPlayerPoints = 0;
@@ -337,5 +344,21 @@ function handleRoundResult(dealerHandPoints, playersHand) {
       }
     }
   }
+
+  // Update player div innerHtml
+  for (let i = 0; i < playerArr.length; i++) {
+    playerHandDivs[i].innerHTML = `<br>${
+      playerArr[i].name
+    }<br>Chips: ${computeChips(playerArr[i])}<br>W/L: ${
+      playerArr[i].winOrLoose
+    }<br>${displayPointsAndCards(playerArr[i].hand, "no")}`;
+  }
+
   return outputStr;
+}
+
+// Compute chips for each player
+function computeChips(playerHand) {
+  console.log(playerHand);
+  return playerHand.chips + playerHand.winOrLoose;
 }
