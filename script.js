@@ -225,20 +225,47 @@ function deal() {
 
 // Calculate Dealer or Players' Points
 function computePoints(hand) {
-  console.log(hand);
-  // Ace is 11
-  let points = 0;
+  // Check how many ace in hand
+  let aceCounter = 0;
   for (let i = 0; i < hand.length; i++) {
-    let currentValue = hand[i].rank;
-    if (currentValue === 1) currentValue = 11;
-    points += currentValue;
+    if (hand.name === "ace") {
+      aceCounter += 1;
+    }
   }
-  if (points <= 21) {
-    return points;
-  } else {
-    points = 0;
+
+  // If one Ace
+  if (aceCounter <= 1) {
+    // Ace is 11
+    let points = 0;
     for (let i = 0; i < hand.length; i++) {
-      points += hand[i].rank;
+      let currentValue = hand[i].rank;
+      if (currentValue === 1) currentValue = 11;
+      points += currentValue;
+    }
+    if (points <= 21) {
+      return points;
+    } else {
+      points = 0;
+      for (let i = 0; i < hand.length; i++) {
+        points += hand[i].rank;
+      }
+      return points;
+    }
+  }
+
+  // If more than one Ace
+  if (aceCounter > 1) {
+    let points = 0;
+    for (let i = 0; i < hand.length; i++) {
+      let currentValue = hand[i].rank;
+      if (currentValue === 1) {
+        currentValue = 11;
+        points += currentValue;
+        if (points > 21) {
+          currentValue = 1;
+          points += currentValue;
+        }
+      }
     }
     return points;
   }
@@ -255,14 +282,14 @@ function displayPointsAndCards(hand, isDealer) {
       }
       return `Dealer Hand<br>Points: ${computePoints(
         hand
-      )}<br>${cardImg}<br><hr>Players Hand `;
+      )}<br>${cardImg}<br><hr>Players Hand<br>`;
     }
     // Hide Dealer's second card;
     for (let i = 0; i < hand.length - 1; i++) {
       cardImg += `<img src="${hand[i].img}" />`;
     }
     cardImg += `<img src="imgs/cardback.svg" />`;
-    return `Dealer Hand<br><br>${cardImg}<br><hr>Players Hand `;
+    return `Dealer Hand<br><br>${cardImg}<br><hr>Players Hand<br>`;
   }
   if (isDealer == "no") {
     for (let i = 0; i < hand.length; i++) {

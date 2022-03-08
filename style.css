@@ -70,6 +70,14 @@ button:hover {
   height: 100px;
 }
 
+hr {
+  height: 3px;
+  background: rgb(161, 163, 163);
+  margin: 20px 0;
+  box-shadow: 0px 0px 4px 2px rgb(56, 55, 55);
+  border-radius: 5px;
+}
+
 #playerHandDiv {
   display: flex;
   flex-direction: row;
@@ -128,6 +136,11 @@ button:hover {
 @media screen and (min-width: 600px) {
   .header {
     font-size: 2rem;
+  }
+
+  #container {
+    margin-left: 100px;
+    margin-right: 100px;
   }
 
   #gif {
