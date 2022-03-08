@@ -124,6 +124,7 @@ standBtn.addEventListener("click", function () {
 
 continueBtn.addEventListener("click", function () {
   playerIdx = 0;
+  deck = shuffleCards(makeDeck());
   outputDiv.innerHTML = "";
   playerHandDiv.innerHTML = "";
   dealerHandDiv.innerHTML = "";
@@ -186,9 +187,9 @@ function deal() {
   //If no player, add name, cards, chips to player array
   if (playerArr == "") {
     let playerCardArr = [];
-    let playerIdx = 0;
-    while (playerIdx < numOfPlayers) {
-      player.name = playerNamesArr[playerIdx];
+    let playerCounter = 0;
+    while (playerCounter < numOfPlayers) {
+      player.name = playerNamesArr[playerCounter];
       playerCardArr.push(deck.pop());
       playerCardArr.push(deck.pop());
       player.hand = playerCardArr;
@@ -196,7 +197,7 @@ function deal() {
       playerArr.push(player);
       player = {};
       playerCardArr = [];
-      playerIdx += 1;
+      playerCounter += 1;
     }
   } else {
     // If player, add cards
@@ -206,8 +207,6 @@ function deal() {
       crtHand.push(deck.pop());
     }
   }
-
-  console.log(playerArr);
 
   // Display player's hand
   for (let i = 0; i < playerArr.length; i++) {
@@ -255,14 +254,14 @@ function displayPointsAndCards(hand, isDealer) {
       }
       return `Dealer Hand<br>Points: ${computePoints(
         hand
-      )}<br>${cardImg}<br><hr>Players Hand: `;
+      )}<br>${cardImg}<br><img src="line.png" /><br>Players Hand: `;
     }
     // Hide Dealer's second card;
     for (let i = 0; i < hand.length - 1; i++) {
       cardImg += `<img src="${hand[i].img}" />`;
     }
     cardImg += `<img src="imgs/cardback.svg" />`;
-    return `Dealer Hand<br><br>${cardImg}<br><hr>Players Hand: `;
+    return `Dealer Hand<br><br>${cardImg}<br><img src="line.png" /><br>Players Hand: `;
   }
   if (isDealer == "no") {
     for (let i = 0; i < hand.length; i++) {
@@ -293,7 +292,12 @@ var main = function (input) {
 
     if (crtPlayerPoints > 21) {
       hitBtn.style.display = "none";
-      playerHandDivs[playerIdx].style.filter = "blur(0.6px)";
+      let bustedGif = document.createElement("img");
+      bustedGif.src =
+        "https://media.giphy.com/media/u4581fHO5kFlgeE8DG/giphy.gif";
+      bustedGif.style.height = "30px";
+      playerHandDivs[playerIdx].appendChild(bustedGif);
+      // playerHandDivs[playerIdx].style.filter = "blur(0.6px)";
       playerHandDivs[playerIdx].style.border = "none";
       return `${playerArr[playerIdx].name}, you are busted.`;
     }
@@ -302,6 +306,7 @@ var main = function (input) {
 
   if (gameState == "stand") {
     hitBtn.style.display = "inline-block";
+    // If all players have made choses
     if (playerIdx === playerArr.length - 1) {
       playerHandDivs[playerIdx].style.border = "none";
       restartBtn.style.display = "inline-block";
@@ -345,13 +350,15 @@ function handleRoundResult(dealerHandPoints, playersHand) {
     outputStr = `Dealer is busted.<br>`;
     for (let i = 0; i < playersHand.length; i++) {
       crtPlayerPoints = playersHand[i].points;
-      console.log(crtPlayerPoints);
       if (crtPlayerPoints > 21) {
         playersHand[i].winOrLoose = -1;
         outputStr += `${playersHand[i].name} has ${crtPlayerPoints} points, got busted, 1 chip lost!<br>`;
-      } else if (crtPlayerPoints <= 21) {
+      } else if (crtPlayerPoints < 21) {
         playersHand[i].winOrLoose = 1;
         outputStr += `${playersHand[i].name} has ${crtPlayerPoints} points, win 1 chip.<br>`;
+      } else if (crtPlayerPoints === 21) {
+        playersHand[i].winOrLoose = 1.5;
+        outputStr += `${playersHand[i].name} has ${crtPlayerPoints} points, win 1.5 chip.<br>`;
       }
     }
   }
@@ -360,8 +367,10 @@ function handleRoundResult(dealerHandPoints, playersHand) {
     outputStr = `Dealer has ${dealerHandPoints} points.<br>`;
     for (let i = 0; i < playersHand.length; i++) {
       crtPlayerPoints = playersHand[i].points;
-      console.log(crtPlayerPoints);
-      if (crtPlayerPoints > 21) {
+      if (crtPlayerPoints === 21 && dealerHandPoints < 21) {
+        playersHand[i].winOrLoose = 1.5;
+        outputStr += `${playersHand[i].name} has ${crtPlayerPoints} points, win 1.5 chip.<br>`;
+      } else if (crtPlayerPoints > 21) {
         playersHand[i].winOrLoose = -1;
         outputStr += `${playersHand[i].name} has ${crtPlayerPoints} points, got busted, 1 chip lost!<br>`;
       } else if (crtPlayerPoints < dealerHandPoints) {
@@ -392,6 +401,5 @@ function handleRoundResult(dealerHandPoints, playersHand) {
 function computeChips(playerHand) {
   let crtChips = playerHand.chips + playerHand.winOrLoose;
   playerHand.chips = crtChips;
-  console.log(playerHand);
   return crtChips;
 }
