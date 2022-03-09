@@ -225,10 +225,12 @@ function deal() {
 
 // Calculate Dealer or Players' Points
 function computePoints(hand) {
+  let points = 0;
+
   // Check how many ace in hand
   let aceCounter = 0;
   for (let i = 0; i < hand.length; i++) {
-    if (hand.name === "ace") {
+    if (hand[i].name === "ace") {
       aceCounter += 1;
     }
   }
@@ -236,7 +238,6 @@ function computePoints(hand) {
   // If one Ace
   if (aceCounter <= 1) {
     // Ace is 11
-    let points = 0;
     for (let i = 0; i < hand.length; i++) {
       let currentValue = hand[i].rank;
       if (currentValue === 1) currentValue = 11;
@@ -255,21 +256,69 @@ function computePoints(hand) {
 
   // If more than one Ace
   if (aceCounter > 1) {
-    let points = 0;
     for (let i = 0; i < hand.length; i++) {
       let currentValue = hand[i].rank;
       if (currentValue === 1) {
         currentValue = 11;
         points += currentValue;
+        console.log(currentValue);
         if (points > 21) {
           currentValue = 1;
-          points += currentValue;
+          points = points + currentValue - 11;
         }
+      } else {
+        points += currentValue;
       }
     }
-    return points;
   }
+  return points;
 }
+
+/*
+ let handArr = [ 
+   {name: '10', suit: 'clubs', rank: 10, img: 'imgs/ace_of_clubs.png'},
+   {name: 'ace', suit: 'clubs', rank: 1, img: 'imgs/ace_of_clubs.png'}, 
+   {name: '10', suit: 'clubs', rank: 10, img: 'imgs/ace_of_clubs.png'},
+ ]
+
+ function getPoints(hand){
+  let points = 0;
+  for(let i = 0; i < hand.length; i++){
+    let currentValue = hand[i].rank;
+    if(currentValue === 1){
+      currentValue = 11;
+      points += currentValue;
+      console.log(currentValue);
+      if(points > 21) {
+        currentValue = 1;
+        points = points + currentValue - 11;
+      }
+    } else {
+      points += currentValue;
+    }
+  }
+  return points;
+ }
+
+ function getPoints(hand){
+   let points = 0;
+   for (let i = 0; i < hand.length; i++) {
+      let currentValue = hand[i].rank;
+      if (currentValue === 1) currentValue = 11;
+      points += currentValue;
+    }
+    if (points <= 21) {
+      return points;
+    } else {
+      points = 0;
+      for (let i = 0; i < hand.length; i++) {
+        points += hand[i].rank;
+      }
+      return points;
+    }
+ }
+ getPoints(handArr);
+*/
 
 // Displayer Dealer and Player's Hand
 function displayPointsAndCards(hand, isDealer) {
