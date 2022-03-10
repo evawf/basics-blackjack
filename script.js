@@ -332,14 +332,14 @@ function displayPointsAndCards(hand, isDealer) {
       }
       return `Dealer Hand<br>Points: ${computePoints(
         hand
-      )}<br>${cardImg}<br><hr>Players Hand<br><br>`;
+      )}<br>${cardImg}<br><hr>Players Hand<br>`;
     }
     // Hide Dealer's second card;
     for (let i = 0; i < hand.length - 1; i++) {
       cardImg += `<img src="${hand[i].img}" />`;
     }
     cardImg += `<img src="imgs/cardback.svg" />`;
-    return `Dealer Hand<br><br>${cardImg}<br><hr>Players Hand<br><br>`;
+    return `Dealer Hand<br>${cardImg}<br><hr>Players Hand<br>`;
   }
   if (isDealer == "no") {
     for (let i = 0; i < hand.length; i++) {
@@ -407,7 +407,7 @@ function handleRoundResult(dealerHandPoints, playersHand) {
 
   // Update player div innerHtml
   for (let i = 0; i < playerArr.length; i++) {
-    playerHandDivs[i].innerHTML = `<br>${
+    playerHandDivs[i].innerHTML = `${
       playerArr[i].name
     }<br>Chips: ${computeChips(playerArr[i])}<br>W/L: ${
       playerArr[i].winOrLoose
@@ -434,8 +434,7 @@ var main = function (input) {
     crtPlayerHand.push(deck.pop());
     playerArr[playerIdx].hand = crtPlayerHand;
     let crtPlayerPoints = computePoints(playerArr[playerIdx].hand);
-    console.log(playerArr);
-    playerHandDivs[playerIdx].innerHTML = `<br>${
+    playerHandDivs[playerIdx].innerHTML = `${
       playerArr[playerIdx].name
     }<br>Chips: ${playerArr[playerIdx].chips}<br>${displayPointsAndCards(
       playerArr[playerIdx].hand,
