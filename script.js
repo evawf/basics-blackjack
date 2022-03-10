@@ -159,7 +159,9 @@ function enterPlayerCount(input) {
 function enterPlayersName(input) {
   inputField.type = "text";
   inputField.placeholder = `Name`;
-  if (input.trim()) {
+  if (input) {
+    if (input.trim().length === 0)
+      return `Please enter player ${playerNum + 1}'s name`;
     playerNamesArr[playerNum] = input.trim();
     if (playerNum === numOfPlayers - 1) {
       gameState = "deal";
@@ -178,7 +180,6 @@ function deal() {
   hitBtn.style.display = "inline-block";
   standBtn.style.display = "inline-block";
   gif.style.display = "none";
-
   computerHandArr.push(deck.pop());
   computerHandArr.push(deck.pop());
   // Display dealer's hand, one card face down
@@ -348,66 +349,6 @@ function displayPointsAndCards(hand, isDealer) {
   }
 }
 
-// Main function
-var main = function (input) {
-  if (gameState == "inputNumOfPlayers") return enterPlayerCount(input);
-  if (gameState == "enterPlayersName") return enterPlayersName(input);
-  if (gameState == "deal") return deal();
-
-  if (gameState == "hit") {
-    let crtPlayerHand = playerArr[playerIdx].hand;
-    crtPlayerHand.push(deck.pop());
-    playerArr[playerIdx].hand = crtPlayerHand;
-    let crtPlayerPoints = computePoints(playerArr[playerIdx].hand);
-    console.log(playerArr);
-    playerHandDivs[playerIdx].innerHTML = `<br>${
-      playerArr[playerIdx].name
-    }<br>Chips: ${playerArr[playerIdx].chips}<br>${displayPointsAndCards(
-      playerArr[playerIdx].hand,
-      "no"
-    )}`;
-
-    if (crtPlayerPoints > 21) {
-      hitBtn.style.display = "none";
-      let bustedGif = document.createElement("img");
-      // bustedGif.id = "bustedGif";
-      bustedGif.src =
-        "https://media.giphy.com/media/u4581fHO5kFlgeE8DG/giphy.gif";
-      bustedGif.style.height = "25px";
-      playerHandDivs[playerIdx].appendChild(bustedGif);
-      // playerHandDivs[playerIdx].style.filter = "blur(0.6px)";
-      playerHandDivs[playerIdx].style.border = "none";
-      return `${playerArr[playerIdx].name}, you are busted.`;
-    }
-    return `${playerArr[playerIdx].name}, you chose to hit.`;
-  }
-
-  if (gameState == "stand") {
-    hitBtn.style.display = "inline-block";
-    // If all players have made choses
-    if (playerIdx === playerArr.length - 1) {
-      playerHandDivs[playerIdx].style.border = "none";
-      restartBtn.style.display = "inline-block";
-      hitBtn.style.display = "none";
-      standBtn.style.display = "none";
-      continueBtn.style.display = "inline-block";
-
-      let dealerHandPoints = revealDealerHand(computerHandArr);
-      // Add points key&value to player
-      for (let i = 0; i < playerArr.length; i++) {
-        playerArr[i].points = computePoints(playerArr[i].hand);
-      }
-      return handleRoundResult(dealerHandPoints, playerArr);
-    }
-    playerIdx += 1;
-    playerHandDivs[playerIdx].style.border = "solid";
-    playerHandDivs[playerIdx - 1].style.border = "none";
-    return `${playerArr[playerIdx - 1].name} chose stand, ${
-      playerArr[playerIdx].name
-    }'s turn`;
-  }
-};
-
 // Draw cards for dealer if dealer's points < 17, then display dealer hand
 function revealDealerHand(hand) {
   let dealerPoints = computePoints(hand);
@@ -481,3 +422,63 @@ function computeChips(playerHand) {
   playerHand.chips = crtChips;
   return crtChips;
 }
+
+// Main function
+var main = function (input) {
+  if (gameState == "inputNumOfPlayers") return enterPlayerCount(input);
+  if (gameState == "enterPlayersName") return enterPlayersName(input);
+  if (gameState == "deal") return deal();
+
+  if (gameState == "hit") {
+    let crtPlayerHand = playerArr[playerIdx].hand;
+    crtPlayerHand.push(deck.pop());
+    playerArr[playerIdx].hand = crtPlayerHand;
+    let crtPlayerPoints = computePoints(playerArr[playerIdx].hand);
+    console.log(playerArr);
+    playerHandDivs[playerIdx].innerHTML = `<br>${
+      playerArr[playerIdx].name
+    }<br>Chips: ${playerArr[playerIdx].chips}<br>${displayPointsAndCards(
+      playerArr[playerIdx].hand,
+      "no"
+    )}`;
+
+    if (crtPlayerPoints > 21) {
+      hitBtn.style.display = "none";
+      let bustedGif = document.createElement("img");
+      // bustedGif.id = "bustedGif";
+      bustedGif.src =
+        "https://media.giphy.com/media/u4581fHO5kFlgeE8DG/giphy.gif";
+      bustedGif.style.height = "25px";
+      playerHandDivs[playerIdx].appendChild(bustedGif);
+      // playerHandDivs[playerIdx].style.filter = "blur(0.6px)";
+      playerHandDivs[playerIdx].style.border = "none";
+      return `${playerArr[playerIdx].name}, you are busted.`;
+    }
+    return `${playerArr[playerIdx].name}, you chose to hit.`;
+  }
+
+  if (gameState == "stand") {
+    hitBtn.style.display = "inline-block";
+    // If all players have made choses
+    if (playerIdx === playerArr.length - 1) {
+      playerHandDivs[playerIdx].style.border = "none";
+      restartBtn.style.display = "inline-block";
+      hitBtn.style.display = "none";
+      standBtn.style.display = "none";
+      continueBtn.style.display = "inline-block";
+
+      let dealerHandPoints = revealDealerHand(computerHandArr);
+      // Add points key&value to player
+      for (let i = 0; i < playerArr.length; i++) {
+        playerArr[i].points = computePoints(playerArr[i].hand);
+      }
+      return handleRoundResult(dealerHandPoints, playerArr);
+    }
+    playerIdx += 1;
+    playerHandDivs[playerIdx].style.border = "solid";
+    playerHandDivs[playerIdx - 1].style.border = "none";
+    return `${playerArr[playerIdx - 1].name} chose stand, ${
+      playerArr[playerIdx].name
+    }'s turn`;
+  }
+};

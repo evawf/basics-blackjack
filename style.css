@@ -153,7 +153,7 @@ hr {
 }
 
 /* For medium screen size: iPad*/
-@media screen and (min-width: 400px) {
+@media screen and (min-width: 425px) {
   body {
     height: auto;
   }
@@ -207,5 +207,9 @@ hr {
   #container {
     width: auto;
     padding: 0 50px;
+  }
+
+  #playerHandDiv {
+    padding-bottom: 40px;
   }
 }
