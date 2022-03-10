@@ -100,12 +100,10 @@
         src="https://ra-web-files.s3.ap-southeast-1.amazonaws.com/all/brand/logo.png"
       />
     </h1>
-    <h4 style="color: red; text-align: center; margin: 0">
+    <h4 class="underHeader" style="color: red; text-align: center; margin: 0">
       BLACK JACK PAYS 3 To 2
     </h4>
-    <p style="text-align: center; margin: 0">
-      Dealer must draw to 16, and stand on all 17's
-    </p>
+    <p class="underHeader">Dealer must draw to 16, and stand on all 17's</p>
     <div id="container">
       <form id="form" action="" method="">
         <input
@@ -115,21 +113,19 @@
           min="1"
           max="6"
         />
-        <br />
         <button id="dealBtn" hidden>Deal</button>
       </form>
       <iframe id="gif" src="https://giphy.com/embed/l2Sq2mPVJr4tfk436"></iframe>
       <div id="outputDiv"></div>
-      <button id="hitBtn" hidden>Hit</button>
-      <button id="standBtn" hidden>Stand</button>
-      <button id="restartBtn" hidden>Restart</button>
-      <button id="continueBtn" hidden>Continue</button>
+      <button class="btn" id="hitBtn" hidden>Hit</button>
+      <button class="btn" id="standBtn" hidden>Stand</button>
+      <button class="btn" id="restartBtn" hidden>Restart</button>
+      <button class="btn" id="continueBtn" hidden>Continue</button>
       <div id="dealerHandDiv"></div>
       <div id="playerHandDiv"></div>
     </div>
     <h1 class="header">♣️ Blackjack Table ♠️</h1>
-
-    <div>
+    <div id="audioDiv">
       <audio autoplay controls id="backgroundMusic">
         <source src="Night-in-Venice.mp3" type="audio/mp3" />
       </audio>

@@ -12,12 +12,22 @@ body {
   background-position: center; /* Center the image */
   background-repeat: no-repeat; /* Do not repeat the image */
   background-size: cover; /* Resize the background image to cover the entire container */
-  height: 800px;
+  height: auto;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
 }
 
 .header {
   text-align: center;
   font-size: 1.1rem;
+}
+
+.underHeader {
+  text-align: center;
+  margin: 0;
+  font-size: 0.7rem;
 }
 
 #container {
@@ -26,17 +36,18 @@ body {
   padding: 8px 31px;
   text-align: center;
   background-color: rgb(7, 87, 43);
-  border-radius: 50px;
+  border-radius: 20px;
 }
 
 #form {
-  margin-top: 10px;
+  /* margin-top: 10px; */
+  margin: 10px 0;
 }
 
 input {
   font-size: 0.8rem;
   line-height: 33px;
-  margin: 0 0 23px 0;
+  /* margin: 0 0 23px 0; */
   padding: 0 9px;
   width: 10rem;
   border-radius: 1.2rem;
@@ -44,7 +55,16 @@ input {
   text-align: center;
 }
 
-button {
+#dealBtn {
+  font-size: 0.8rem;
+  line-height: 1.8rem;
+  /* margin: 20px 0 20px 0; */
+  padding: 0 6px;
+  width: 5rem;
+  border-radius: 21px;
+}
+
+.btn {
   font-size: 0.8rem;
   line-height: 1.8rem;
   margin: 20px 0 20px 0;
@@ -58,10 +78,10 @@ button:hover {
   background-color: black;
 }
 
-#outpuDiv {
-  margin: 20px auto;
+#outputDiv {
   padding: 10px;
   width: 100%;
+  font-size: x-small;
 }
 
 #dealerHandDiv img {
@@ -73,7 +93,6 @@ button:hover {
 hr {
   height: 3px;
   background: rgb(161, 163, 163);
-  margin: 20px 0;
   box-shadow: 0px 0px 4px 2px rgb(56, 55, 55);
   border-radius: 5px;
 }
@@ -85,7 +104,6 @@ hr {
   justify-content: center;
   align-content: center;
   text-align: center;
-  padding-bottom: 100px;
 }
 
 #playerHandDiv img {
@@ -117,8 +135,8 @@ hr {
 
 #backgroundMusic {
   width: 180px;
-  height: 25px;
-  margin: 10px 0 0 0;
+  height: 20px;
+  font-size: 10px;
 }
 
 #gif {
@@ -126,10 +144,18 @@ hr {
   border: none;
 }
 
+/* For medium screen size: iPad*/
 @media screen and (min-width: 400px) {
+  body {
+    height: auto;
+  }
   #line {
     width: auto;
     height: 20px;
+  }
+
+  #gif {
+    width: 300px;
   }
 }
 
@@ -142,10 +168,5 @@ hr {
   #container {
     margin-left: 100px;
     margin-right: 100px;
-  }
-
-  #gif {
-    width: 600px;
-    height: 300px;
   }
 }

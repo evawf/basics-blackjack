@@ -235,7 +235,7 @@ function computePoints(hand) {
     }
   }
 
-  // If one Ace
+  // If one or no Ace
   if (aceCounter <= 1) {
     // Ace is 11
     for (let i = 0; i < hand.length; i++) {
