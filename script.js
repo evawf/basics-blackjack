@@ -159,7 +159,7 @@ function enterPlayerCount(input) {
 function enterPlayersName(input) {
   inputField.type = "text";
   inputField.placeholder = `Name`;
-  if (input) {
+  if (input.trim()) {
     playerNamesArr[playerNum] = input.trim();
     if (playerNum === numOfPlayers - 1) {
       gameState = "deal";

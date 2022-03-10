@@ -4,8 +4,8 @@
 
 body {
   font-family: "Open Sans", sans-serif;
-  margin-left: 30px;
-  margin-right: 30px;
+  margin-left: 10px;
+  margin-right: 10px;
   background-color: rgba(43, 44, 43, 0.993);
   color: white; /* sets the font color */
   /* background-image: url("imgs/background.jpg"); The image used */
@@ -31,9 +31,8 @@ body {
 }
 
 #container {
-  width: auto;
   margin: 10px auto;
-  max-width: 100%;
+  width: 100%;
   padding: 10px 10px;
   text-align: center;
   background-color: rgb(7, 87, 43);
@@ -186,7 +185,7 @@ hr {
 
   .playerHand {
     width: 200px;
-    height: 200px;
+    height: auto;
     margin-bottom: 10px;
     border-radius: 10px;
   }
