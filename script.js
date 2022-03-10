@@ -213,7 +213,7 @@ function deal() {
     const handDiv = document.createElement("div");
     handDiv.id = `player${i}`;
     handDiv.classList.add("playerHand");
-    handDiv.innerHTML = `<br>${playerArr[i].name}<br>Chips: ${
+    handDiv.innerHTML = `${playerArr[i].name}<br>Chips: ${
       playerArr[i].chips
     }<br>${displayPointsAndCards(playerArr[i].hand, "no")}`;
     playerHandDiv.appendChild(handDiv);
@@ -331,14 +331,14 @@ function displayPointsAndCards(hand, isDealer) {
       }
       return `Dealer Hand<br>Points: ${computePoints(
         hand
-      )}<br>${cardImg}<br><hr>Players Hand<br>`;
+      )}<br>${cardImg}<br><hr>Players Hand<br><br>`;
     }
     // Hide Dealer's second card;
     for (let i = 0; i < hand.length - 1; i++) {
       cardImg += `<img src="${hand[i].img}" />`;
     }
     cardImg += `<img src="imgs/cardback.svg" />`;
-    return `Dealer Hand<br><br>${cardImg}<br><hr>Players Hand<br>`;
+    return `Dealer Hand<br><br>${cardImg}<br><hr>Players Hand<br><br>`;
   }
   if (isDealer == "no") {
     for (let i = 0; i < hand.length; i++) {
@@ -370,9 +370,10 @@ var main = function (input) {
     if (crtPlayerPoints > 21) {
       hitBtn.style.display = "none";
       let bustedGif = document.createElement("img");
+      // bustedGif.id = "bustedGif";
       bustedGif.src =
         "https://media.giphy.com/media/u4581fHO5kFlgeE8DG/giphy.gif";
-      bustedGif.style.height = "30px";
+      bustedGif.style.height = "25px";
       playerHandDivs[playerIdx].appendChild(bustedGif);
       // playerHandDivs[playerIdx].style.filter = "blur(0.6px)";
       playerHandDivs[playerIdx].style.border = "none";

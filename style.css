@@ -31,9 +31,10 @@ body {
 }
 
 #container {
+  width: auto;
   margin: 10px auto;
   max-width: 100%;
-  padding: 8px 31px;
+  padding: 10px 10px;
   text-align: center;
   background-color: rgb(7, 87, 43);
   border-radius: 20px;
@@ -84,10 +85,14 @@ button:hover {
   font-size: x-small;
 }
 
+#dealerHandDiv {
+  font-size: small;
+}
+
 #dealerHandDiv img {
   margin: 0 5px 0 5px;
   display: inline-block;
-  height: 100px;
+  height: 50px;
 }
 
 hr {
@@ -104,13 +109,13 @@ hr {
   justify-content: center;
   align-content: center;
   text-align: center;
+  font-size: x-small;
 }
 
 #playerHandDiv img {
-  margin: 0 5px 0 5px;
   display: inline-block;
-  height: 100px;
-  margin-left: -50px;
+  height: 50px;
+  margin-left: -25px;
 }
 
 .logo-img {
@@ -127,9 +132,9 @@ hr {
 }
 
 .playerHand {
-  width: 200px;
-  height: 200px;
-  margin-bottom: 10px;
+  width: 100px;
+  height: auto;
+  margin-bottom: 5px;
   border-radius: 10px;
 }
 
@@ -144,11 +149,22 @@ hr {
   border: none;
 }
 
+#bustedGif {
+  height: 15px;
+}
+
 /* For medium screen size: iPad*/
 @media screen and (min-width: 400px) {
   body {
     height: auto;
   }
+
+  #outputDiv {
+    padding: 10px;
+    width: 100%;
+    font-size: small;
+  }
+
   #line {
     width: auto;
     height: 20px;
@@ -156,6 +172,30 @@ hr {
 
   #gif {
     width: 300px;
+  }
+
+  #bustedGif {
+    height: 30px;
+  }
+
+  #dealerHandDiv img {
+    margin: 0 5px 0 5px;
+    display: inline-block;
+    height: 100px;
+  }
+
+  .playerHand {
+    width: 200px;
+    height: 200px;
+    margin-bottom: 10px;
+    border-radius: 10px;
+  }
+
+  #playerHandDiv img {
+    margin: 0 5px 0 5px;
+    display: inline-block;
+    height: 100px;
+    margin-left: -50px;
   }
 }
 
@@ -166,7 +206,7 @@ hr {
   }
 
   #container {
-    margin-left: 100px;
-    margin-right: 100px;
+    width: auto;
+    padding: 0 50px;
   }
 }
